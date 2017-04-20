@@ -23,6 +23,12 @@ It's wise to obey the advice in Adafruit's [Neopixel UberGuide](https://learn.ad
 nuances to hooking them up (such as putting a 470-Ohm resistor in series in the data line and a 1000 micro-Farad capacitor across the
 power supply to the pixels) that are helpful if you want your pixels to have a long life.
 
+The code only does one thing that is sohpisticated in a very small way: it gamma corrects the LEDs so that a gradual fade from zero
+to one hundred percent brightness is a smooth, even transition.  The idea for this gamma correction (but not the code) came from an
+[article in Hackaday](http://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/), which you can 
+check out if you want to understand what I've done in more detail.  There is also a detailed Wikipedia entry on 
+[gamma correction](https://en.wikipedia.org/wiki/Gamma_correction) that you may find helpful.
+
 ## License
 
 This code, such as it is, is available under the [MIT license](http://opensource.org/licenses/MIT).
