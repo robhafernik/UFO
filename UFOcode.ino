@@ -36,9 +36,10 @@
 #define FADE_FAST_VELOCITY    100
 #define SPIN_VELOCITY         100
 #define SPARKLE_VELOCITY       10
+#define CHASE_VELOCITY        100
 
-// mode variable: 0 = slow, calm fades     1 = spin animations     2 = colorful mix
-int mode = 2;
+// mode variable: 0 = slow, calm fades     1 = spin animations     2 = colorful mix     3 -= pixels chase in circle
+int mode = 3;
 
 // gamma table, brightness correction
 // see:   http://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/
@@ -97,7 +98,7 @@ void loop() {
   } else if (mode == 1) {
 
     // spinning animations
-
+    
     crossFadeAll (  0,   0,  0,    0,   0,  80,  20, FADE_FAST_VELOCITY);
     spinner ( 128, 8,   0,   0,  80, SPIN_VELOCITY);
     crossFadeAll (  0,   0, 80,   60,  60,  60,  20, FADE_FAST_VELOCITY);
@@ -108,17 +109,84 @@ void loop() {
   } else if (mode == 2) {
 
     // random colorful mix
-
+    
     for (short j = 0; j < PIX_IN_RING; ++j) { setPix (j, 0, 0, 0); }
     strip.show();
     delay(SPARKLE_VELOCITY);
     sparkle(400, 90);
+    
+  } else if (mode == 3) {
+
+    // chasing pixels
+    for (short j = 0; j < PIX_IN_RING; ++j) { setPix (j, 0, 0, 0); }
+    strip.show();
+    chase ( 60,0,0,  80,80,80,  128);
+    
+    for (short j = 0; j < PIX_IN_RING; ++j) { setPix (j, 0, 0, 0); }
+    strip.show();
+    chase ( 40,40,0,  0,0,80,  128);
+
+    for (short j = 0; j < PIX_IN_RING; ++j) { setPix (j, 0, 0, 0); }
+    strip.show();
+    chase ( 80,80,80,  0,0,0,  128);
+
+    for (short j = 0; j < PIX_IN_RING; ++j) { setPix (j, 0, 0, 0); }
+    strip.show();
+    chase ( 0,0,30,  0,0,90,  128);
+
   }
 
   // go from mode to mode
-  mode = (mode + 1) % 3; 
+  mode = (mode + 1) % 4; 
 }
 
+/*
+ * Lights chasing around in a circle
+ */
+void chase(short rback, short gback, short bback, short r, short g, short b, int reps) {
+  short pos = 3;
+
+  // calculate the faded following pixels
+  short rdelta = ((r - rback)/3);
+  short gdelta = ((g - gback)/3);
+  short bdelta = ((b - bback)/3);
+
+  short r1 = r - rdelta;
+  short g1 = g - gdelta;
+  short b1 = b - bdelta;
+
+  short r2 = r - rdelta - rdelta;
+  short g2 = g - gdelta - gdelta;
+  short b2 = b - bdelta - rdelta;
+
+  // set all to background
+  for (short i = 0; i < PIX_IN_RING; ++i) {
+        setPix(i, rback, gback, bback);
+  }
+
+  // set lead and following pixels
+  for (short c = 0; c< reps; ++c) {
+    pos = pos % PIX_IN_CIRCLE;
+    
+    short pm1 = pos - 1;
+    if(pm1 < 0) { pm1 += PIX_IN_CIRCLE; }
+    short pm2 = pos - 2;
+    if(pm2 < 0) { pm2 += PIX_IN_CIRCLE; }
+    short pm3 = pos - 3;
+    if(pm3 < 0) { pm3 += PIX_IN_CIRCLE; }
+
+    setPix(pos, r, g, b);
+    setPix(pm1, r1, g1, b1);
+    setPix(pm2, r2, g2, b2);
+    setPix(pm3, rback, gback, bback);
+
+    ++pos;
+
+    strip.show();
+    delay(CHASE_VELOCITY);
+  }
+}
+ 
 /*
  * Random, colorful mix.  maxBrite is percent, not 0-255 absolute value
  */
