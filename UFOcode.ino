@@ -2,10 +2,8 @@
  * This is the code that runs the 23 neo pixels on the UFO Sculpture (see photos).
  * Written by Rob Hafernik, Spring, 2017.
  *
- * This code is release under the Creative Commons Attribution license.  
- * You may distribute, remix, tweak, and build upon your work, even commercially, as 
- * long as you credit me for the original creation.
- * See: https://creativecommons.org/licenses/by/4.0/
+ * This code is released under the The MIT License (MIT):
+ * https://github.com/robhafernik/UFO/blob/master/LICENSE.md
  * 
  * IMPORTANT: pay attention to the advice and restrictions in the Adafruit Neopixel Uberguide:
  * https://learn.adafruit.com/adafruit-neopixel-uberguide/
